@@ -21,8 +21,63 @@ CREATE TABLE Joueur(
 CREATE TABLE Match(
     idMatch serial primary key,
     lieu varchar(60),
-    dateDebut date
+    dateDebut date,
+    idequipe1 int,
+    idequipe2 int,
+    foreign key(idEquipe1) references Equipe(idEquipe),
+    foreign key(idEquipe2) references Equipe(idEquipe)
 );
+CREATE TABLE actions(
+    idactions serial primary key,
+    actions varchar(60)
+);
+
+CREATE TABLE Mouvement(
+    idmouvement serial primary key,
+    idJoueur int,
+    idMatch int,
+    idActions int,
+    points int,
+    foreign key(idJoueur) references Joueur(idJoueur),
+    foreign key(idMatch) references Match(idMatch),
+    foreign key(idActions) references actions(idActions)
+
+);
+
+CREATE TABLE JoueurMatch(
+    idJoueur int,
+    idMatch int,
+    foreign key(idJoueur) references Joueur(idJoueur),
+    foreign key(idMatch) references Match(idMatch)
+);
+
+CREATE TABLE EntreeJoueurMatch(
+    identree serial primary key,
+    idJoueur int,
+    idMatch int,
+    minuteEntree time
+);
+
+CREATE TABLE SortieJoueurMatch(
+    identree int,
+    minuteSortie time,
+    foreign key(identree) references EntreeJoueurMatch(identree)
+);
+
+CREATE TABLE JoueurEquipe(
+    idJoueur int,
+    idEquipe int,
+    dateDebut date,
+    dateFin date,
+    foreign key(idJoueur) references Joueur(idJoueur),
+    foreign key(idEquipe) references Equipe(idEquipe)
+);
+
+CREATE VIEW mpm as 
+select sum(s.minutesortie-e.minuteentree) as temps,idjoueur,idmatch 
+from sortiejoueurMatch as s 
+join entreeJoueurMatch as e on s.identree=e.identree
+group by idjoueur,idmatch;
 
 -- Insertion de données pour la table Equipe
 INSERT INTO Equipe (nomEquipe) VALUES
@@ -49,14 +104,90 @@ INSERT INTO Joueur (nomJoueur, dateNaissance, mesure, idEquipe, sexe) VALUES
     ('OG Anunoby', '1997-07-17', 203.0, 3, 'Masculin');
 
 -- Insertion de données pour la table Match
-INSERT INTO Match (lieu, dateDebut) VALUES
-    ('Staples Center, Los Angeles', '2023-01-15'),
-    ('Chase Center, San Francisco', '2023-01-18'),
-    ('Scotiabank Arena, Toronto', '2023-01-20'),
-    ('Madison Square Garden, New York', '2023-01-22'),
-    ('Smoothie King Center, New Orleans', '2023-01-25'),
-    ('TD Garden, Boston', '2023-01-28'),
-    ('Amway Center, Orlando', '2023-02-01'),
-    ('United Center, Chicago', '2023-02-03'),
-    ('Oracle Arena, Oakland', '2023-02-06'),
-    ('Fiserv Forum, Milwaukee', '2023-02-09');
+INSERT INTO Match (lieu, dateDebut, idequipe1, idequipe2) VALUES
+    ('Staples Center, Los Angeles', '2023-01-15', 1, 2),
+    ('Chase Center, San Francisco', '2023-01-18', 2, 3),
+    ('Scotiabank Arena, Toronto', '2023-01-20', 1, 3),
+    ('Madison Square Garden, New York', '2023-01-22', 2, 1),
+    ('Smoothie King Center, New Orleans', '2023-01-25', 3, 1),
+    ('TD Garden, Boston', '2023-01-28', 1, 2),
+    ('Amway Center, Orlando', '2023-02-01', 3, 1),
+    ('United Center, Chicago', '2023-02-03', 2, 3),
+    ('Oracle Arena, Oakland', '2023-02-06', 3, 1),
+    ('Fiserv Forum, Milwaukee', '2023-02-09', 1, 2);
+
+INSERT INTO JoueurMatch VALUES
+(1,1),
+(2,1),
+(3,1),
+(4,1),
+(5,1),
+(6,1),
+(7,1),
+(8,1),
+(1,2),
+(2,2),
+(3,2),
+(4,2),
+(5,2),
+(6,2),
+(7,2),
+(8,2);
+
+INSERT INTO actions(actions) values
+('Tir'),
+('Rebond'),
+('Passe Decisive'),
+('Passe'),
+('Lance franc');
+
+
+INSERT INTO mouvement values
+(default,1,1,1,0),
+(default,1,1,1,2),
+(default,1,1,1,3),
+(default,1,1,2,0),
+(default,1,1,3,0),
+(default,1,1,4,1);
+
+-- Insertion de données pour la table EntreeJoueurMatch
+INSERT INTO EntreeJoueurMatch (idJoueur, idMatch, minuteEntree) VALUES
+    (1, 1, '12:15:00'),
+    (2, 1, '12:20:00'),
+    (3, 2, '14:30:00'),
+    (4, 2, '14:35:00'),
+    (5, 3, '16:45:00'),
+    (6, 3, '16:50:00'),
+    (7, 4, '19:00:00'),
+    (8, 4, '19:05:00'),
+    (9, 5, '21:15:00'),
+    (10, 5, '21:20:00'),
+    (1, 2, '21:20:00');
+
+-- Insertion de données pour la table SortieJoueurMatch
+INSERT INTO SortieJoueurMatch (identree, minuteSortie) VALUES
+    (1, '12:45:00'),
+    (2, '12:50:00'),
+    (3, '15:00:00'),
+    (4, '15:05:00'),
+    (5, '17:15:00'),
+    (6, '17:20:00'),
+    (7, '19:30:00'),
+    (8, '19:35:00'),
+    (9, '21:45:00'),
+    (10, '21:50:00'),
+    (11, '21:50:00');
+
+
+-- Insertion de données pour la table JoueurEquipe
+INSERT INTO JoueurEquipe (idJoueur, idEquipe, dateDebut, dateFin) VALUES
+    (1, 1, '2022-01-01', '2022-12-31'),
+    (2, 2, '2022-01-01', '2022-12-31'),
+    (3, 3, '2022-01-01', '2022-12-31'),
+    (4, 1, '2022-01-01', '2022-12-31'),
+    (5, 3, '2022-01-01', '2022-12-31'),
+    (6, 2, '2022-01-01', '2022-12-31'),
+    (7, 3, '2022-01-01', '2022-12-31'),
+    (8, 2, '2022-01-01', '2022-12-31'),
+    (9, 3, '2022-01-01', '2022-12-31'),
+    (10, 3, '2022-01-01', '2022-12-31');

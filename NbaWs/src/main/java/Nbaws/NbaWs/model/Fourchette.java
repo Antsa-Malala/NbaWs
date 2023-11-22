@@ -1,29 +1,29 @@
 package Nbaws.NbaWs.model;
 
-import java.sql.Timestamp;
+import org.bson.BsonTimestamp;
 
 
 public class Fourchette {
-    Timestamp entree;
-    Timestamp sortie;
+    BsonTimestamp entree;
+    BsonTimestamp sortie;
 
-    public Timestamp getEntree() {
+    public BsonTimestamp getEntree() {
         return entree;
     }
 
-    public void setEntree(Timestamp entree) {
+    public void setEntree(BsonTimestamp entree) {
         this.entree = entree;
     }
 
-    public Timestamp getSortie() {
+    public BsonTimestamp getSortie() {
         return sortie;
     }
 
-    public void setSortie(Timestamp sortie) {
+    public void setSortie(BsonTimestamp sortie) {
         this.sortie = sortie;
     }
 
-    public Fourchette(Timestamp entree, Timestamp sortie) {
+    public Fourchette(BsonTimestamp entree, BsonTimestamp sortie) {
         this.setEntree(entree);
         this.setSortie(sortie);
     }

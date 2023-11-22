@@ -1,9 +1,12 @@
 package Nbaws.NbaWs.model;
 
+import java.util.List;
+
 public class Minute {
     int id;
     int match;
-    Fourchette[] fourchette;
+    List<Fourchette> fourchette;
+    int joueur;
 
     public int getId() {
         return id;
@@ -11,6 +14,13 @@ public class Minute {
 
     public void setId(int id) {
         this.id = id;
+    }
+    public int getJoueur() {
+        return joueur;
+    }
+
+    public void setJoueur(int id) {
+        this.joueur = id;
     }
 
     public int getMatch() {
@@ -21,18 +31,19 @@ public class Minute {
         this.match = match;
     }
 
-    public Fourchette[] getFourchette() {
+    public List<Fourchette> getFourchette() {
         return fourchette;
     }
 
-    public void setFourchette(Fourchette[] fourchette) {
+    public void setFourchette(List<Fourchette> fourchette) {
         this.fourchette = fourchette;
     }
 
-    public Minute(int id, int match, Fourchette[] fourchette) {
+    public Minute(int id, int match, List<Fourchette> fourchette,int joueur) {
         this.setId(id);
         this.setMatch(match);
         this.setFourchette(fourchette);
+        this.setJoueur(joueur);
     }
     
     
